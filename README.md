@@ -1,11 +1,21 @@
 # NothingsBland.com
-NothingsBland.com
 
+## Development Tasks
 
-### Docker
+Setup
 
-#### Development
+The following commands will spin up the docker environment
 ```
-docker build -t nothingsbland-img -f Dockerfile-dev.
-docker run -tdi --name nothingsbland1 nothingsbland-img
+$ source ./docker/docker_env.sh
+$ docker-wipe && docker-build && docker-run
 ```
+
+- docker-wipe   # Stop, kill and remove all docker processes and images
+- docker-build  # Build the development docker images
+- docker-run    # Run the development images with proper volumes
+- app-build-run   # Will build and execute application
+
+## Notes
+
+- Only use Docker engine for local development
+- Kubernetes will be attempted for server orchestration
