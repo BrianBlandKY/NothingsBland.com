@@ -7,15 +7,12 @@
 FROM debian:latest
 
 # Web Ports
-EXPOSE 80/tcp
 EXPOSE 8080/tcp
 
 ENV GOPATH /go:/
 ENV GOBIN /go/bin
 ENV PATH $PATH:/go/bin
 ENV PATH=$PATH:/usr/local/go/bin
-
-VOLUME /apps
 
 # updates
 RUN apt-get update -qq && \
@@ -28,10 +25,6 @@ WORKDIR /tmp
 RUN wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
-# Go 1.8.3
-# RUN wget https://redirector.gvt1.com/edgedl/go/go1.8.3.linux-amd64.tar.gz && \
-#     tar -C /usr/local -xzf go1.8.3.linux-amd64.tar.gz
-
 # Configure nginx
 # Remove default site
 RUN rm -r /etc/nginx/sites-enabled/default
@@ -42,21 +35,18 @@ COPY nothingsbland.com.conf /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/nothingsbland.com.conf /etc/nginx/sites-enabled/nothingsbland.com.conf
 RUN service nginx restart
 
+COPY nothingsbland/ /apps
 WORKDIR /apps
 
-# install go-wrapper
 COPY go-wrapper /usr/local/bin
 RUN chmod 775 /usr/local/bin/go-wrapper
 
-# Doesn't work with Volumes
-# RUN go-wrapper download
-# RUN go-wrapper install
-
-# Manual Dependencies
-RUN go get -u github.com/kataras/iris
+RUN go-wrapper download
+RUN go-wrapper install
 
 # simple entry point for continuous server
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["go-wrapper", "run"]
 
 # ENTRYPOINT [ "watcher" ]
 # CMD bash -c "watcher > /logs/docker.log 2>&1"
@@ -65,7 +55,7 @@ ENTRYPOINT ["tail", "-f", "/dev/null"]
 # docker build -t nothingsbland-img -f Dockerfile .
 
 # Run
-# docker run -tdi -v /Users/bland/Development/Go/src/nothingsbland.com/nothingsbland:/apps -p 8080:8080 -p 80:80 --name nothingsbland nothingsbland-img
+# docker run -tdi -p 8080:8080 --name nothingsbland nothingsbland-img
 
 # Exec
 # docker exec -ti nothingsbland sh -c "go run main.go"
