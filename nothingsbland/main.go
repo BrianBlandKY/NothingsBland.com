@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"time"
@@ -33,8 +34,10 @@ func notFoundHandler(ctx iris.Context) {
 }
 
 func main() {
+	configFile := flag.String("config", "app.yaml", "NothingsBland configuration file")
+
 	// Get app.yaml from command line flag
-	cfg := c.ParseConfig("./app.yaml")
+	cfg := c.ParseConfig(*configFile)
 
 	app := iris.New()
 	app.Logger().SetLevel(cfg.Server.LogLevel)
