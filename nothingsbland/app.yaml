@@ -1,0 +1,4 @@
+env: dev
+server:
+    log_level: debug 
+    port: 8080
