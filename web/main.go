@@ -6,9 +6,10 @@ import (
 	"os"
 	"time"
 
-	c "NothingsBland.com/nothingsbland/config"
-	"NothingsBland.com/nothingsbland/controllers"
+	c "NothingsBland.com/web/config"
+	"NothingsBland.com/web/controllers"
 	"github.com/kataras/iris"
+	"github.com/kataras/iris/cache"
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/mvc"
@@ -34,10 +35,8 @@ func notFoundHandler(ctx iris.Context) {
 }
 
 func main() {
-	configFile := flag.String("config", "app.yaml", "NothingsBland configuration file")
-
-	// Get app.yaml from command line flag
-	cfg := c.ParseConfig(*configFile)
+	configFile := flag.String("config", "", "NothingsBland configuration file")
+	cfg := c.BuildConfig(*configFile)
 
 	app := iris.New()
 	app.Logger().SetLevel(cfg.Server.LogLevel)
@@ -46,15 +45,27 @@ func main() {
 	app.Use(recover.New())
 	app.Use(logger.New())
 
+	if cfg.Server.EnableCaching {
+		cacheHandler := cache.Handler(24 * time.Hour)
+		app.Use(cacheHandler)
+	}
+
 	// File Logging
-	// f := newLogFile()
-	// defer f.Close()
-	// app.Logger().SetOutput(newLogFile())
+	if cfg.Server.EnableLogging {
+		f := newLogFile()
+		defer f.Close()
+		app.Logger().SetOutput(newLogFile())
+	}
 
 	// Environment
-	// app.Favicon("./public/images/favicon.ico")
-	// app.StaticWeb("/assets", "./public/assets")
 	app.OnErrorCode(iris.StatusNotFound, notFoundHandler)
+	app.Favicon("./public/images/favicon.ico")
+	app.StaticWeb("/assets", "./public/assets")
+
+	// Templates
+	tmpl := iris.HTML("./templates", ".html").Layout("layout.html")
+	tmpl.Reload(cfg.Server.RebuildTemplates)
+	app.RegisterView(tmpl)
 
 	// Controllers
 	mvc.New(app).Handle(new(controllers.MainController))

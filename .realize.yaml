@@ -9,14 +9,14 @@ server:
   host: ""
 schema:
 - name: NothingsBland.com
-  path: ./nothingsbland
+  path: ./web
   commands:
     install:
-      status: true
+      status: false
     build:
       status: true
     run:
-      status: true
+      status: false
   watcher:
     paths:
     - /
@@ -26,3 +26,8 @@ schema:
     - .git
     - .realize
     - vendor
+    scripts:
+    - type: after
+      command: ./web
+      global: false
+      output: true
