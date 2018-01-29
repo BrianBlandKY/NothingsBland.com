@@ -1,0 +1,4 @@
+server:
+    env: prod
+    port: 8080
+    assets_directory: "./public"

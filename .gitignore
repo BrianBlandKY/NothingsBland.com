@@ -19,3 +19,5 @@ vendor
 # ignore the executable
 NothingsBland.com
 web/web
+
+.DS_Store
