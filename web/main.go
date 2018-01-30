@@ -74,6 +74,8 @@ func (s *NothingsBlandServer) Setup() {
 
 // Run -
 func (s *NothingsBlandServer) Run() {
+	log.Printf("Server running @ :%v\n", s.cfg.Server.Port)
+	s.log("Server running @ :%v\n", s.cfg.Server.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", s.cfg.Server.Port), s.router))
 }
 

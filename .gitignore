@@ -20,4 +20,8 @@ vendor
 NothingsBland.com
 web/web
 
+# Mac cache file
 .DS_Store
+
+# Minified Files
+web/public_min
