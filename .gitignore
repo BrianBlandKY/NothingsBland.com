@@ -20,6 +20,7 @@ vendor
 # ignore the executable
 NothingsBland.com
 web/web
+minifier/minifier
 
 # Mac cache file
 .DS_Store
