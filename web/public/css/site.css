@@ -7,20 +7,31 @@ body {
     background-color: #FFF;
 }
 
+.logo {
+    margin: 0 auto;
+    width: 250px;
+    height: 250px;
+    background-image: url("/assets/images/logo.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-attachment: fixed;
+    background-size: 250px 250px;
+}
+
 .social-media-container {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     position: relative; 
-    height: 30px; 
+    height: 60px; 
     width: 100%; 
     padding: 0;
-    margin: 0;
 }
 
 .social-media-link {
-    height: 40px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
+    margin: 1em 0.5em;
 }
 
 .scaling-svg {
@@ -28,4 +39,30 @@ body {
     height: 100%; 
     left: 0; 
     top: 0;
+}
+
+@media only screen 
+  and (min-device-width: 1024px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+    .logo {
+        width: 400px;
+        height: 400px;
+        background-size: 400px 400px;
+    }
+
+    .social-media-container {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        position: relative; 
+        height: 100px; 
+        width: 100%; 
+        padding: 0;
+    }
+
+    .social-media-link {
+        height: 80px;
+        width: 80px;
+        margin: 1em 0.5em;
+    }
 }

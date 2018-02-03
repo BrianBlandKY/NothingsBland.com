@@ -23,7 +23,8 @@ type NothingsBlandServer struct {
 func (s *NothingsBlandServer) newLogFile() *os.File {
 	filename := time.Now().Format("Jan 02 2006")
 	// open an output file, this will append to the today's file if server restarted.
-	f, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	logFileName := fmt.Sprintf("%s/%s", s.cfg.Server.LogDirectory, filename)
+	f, err := os.OpenFile(logFileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +32,7 @@ func (s *NothingsBlandServer) newLogFile() *os.File {
 }
 
 func (s *NothingsBlandServer) log(format string, data ...interface{}) {
-	s.logger.Printf(format, data)
+	s.logger.Printf(format, data...)
 }
 
 // Setup -
@@ -55,14 +56,14 @@ func (s *NothingsBlandServer) Setup() {
 	// Not Found Handler
 	// Logs and redirects all not found errors to the index page.
 	notFoundHandler := func(w http.ResponseWriter, r *http.Request) {
-		s.log("Not Found %v", r.URL)
+		s.log("Not Found %v \n", r.URL)
 		http.Redirect(w, r, "/", 301)
 	}
 
 	// Panic Handler
 	// Logs panic errors and redirects to the root
 	panicHandler := func(w http.ResponseWriter, r *http.Request, data interface{}) {
-		s.log("Error %v", data)
+		s.log("Error %v \n", data)
 		http.Redirect(w, r, "/", 301)
 	}
 
@@ -74,8 +75,8 @@ func (s *NothingsBlandServer) Setup() {
 
 // Run -
 func (s *NothingsBlandServer) Run() {
-	log.Printf("Server running @ :%v\n", s.cfg.Server.Port)
-	s.log("Server running @ :%v\n", s.cfg.Server.Port)
+	log.Printf("Server running @ :%s \n", s.cfg.Server.Port)
+	s.log("Server running @ :%s \n", s.cfg.Server.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", s.cfg.Server.Port), s.router))
 }
 

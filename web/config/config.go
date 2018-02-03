@@ -8,9 +8,9 @@ import (
 
 type Server struct {
 	Environment     string `yaml:"env"`
-	LogLevel        string `yaml:"log_level"`
 	Port            string `yaml:"port"`
 	AssetsDirectory string `yaml:"assets_directory"`
+	LogDirectory    string `yaml:"log_directory"`
 }
 
 type Config struct {
